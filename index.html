@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UK Late Payment Chaser - Get Paid Without The Awkwardness</title>
+<style>
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:#f4f6f8;color:#111;margin:0;padding:20px}
+.wrap{max-width:800px;margin:0 auto;background:#fff;border-radius:12px;padding:28px;box-shadow:0 4px 20px rgba(0,0,0,.08)}
+h1{font-size:28px;margin:0 0 8px}.sub{color:#555;margin:0 0 20px}
+label{display:block;font-weight:700;margin:14px 0 6px}
+input{width:100%;padding:12px;border:1px solid #ddd;border-radius:8px;font-size:16px;box-sizing:border-box}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+button.main{width:100%;margin-top:20px;padding:14px;background:#0b3d91;color:#fff;border:0;border-radius:10px;font-size:18px;font-weight:700;cursor:pointer}
+.box{margin-top:24px;border:1px solid #e5e5e5;border-radius:10px;padding:18px;background:#fbfbfc}
+.box h3{margin:0 0 8px}
+pre{white-space:pre-wrap;background:#fff;border:1px solid #eee;border-radius:8px;padding:14px;font-size:14px;line-height:1.6}
+.copy{padding:8px 14px;border:1px solid #0b3d91;color:#0b3d91;background:#fff;border-radius:8px;cursor:pointer;font-weight:700}
+.note{font-size:13px;color:#666;margin-top:14px}
+.calc{background:#eef4ff;border-radius:10px;padding:14px;margin-top:18px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>UK Late Payment Chaser 🇬🇧</h1>
+<p class="sub">Get paid without the awkwardness. Generate polite reminders + a formal Letter Before Action with UK interest calculated.</p>
+
+<label>Your name / business</label>
+<input id="myName" placeholder="e.g. Alex Smith Design">
+<label>Client name</label>
+<input id="client" placeholder="e.g. Bright Cafe Ltd">
+<div class="row">
+<div><label>Invoice number</label><input id="inv" placeholder="e.g. INV-012"></div>
+<div><label>Amount £</label><input id="amount" type="number" placeholder="e.g. 2000"></div>
+</div>
+<div class="row">
+<div><label>Invoice date</label><input id="invDate" type="date"></div>
+<div><label>Due date</label><input id="dueDate" type="date"></div>
+</div>
+
+<button class="main" onclick="gen()">Generate My 3 Letters →</button>
+
+<div id="out" style="display:none">
+<div class="calc" id="calc"></div>
+
+<div class="box"><h3>1. Polite Reminder - Send Now</h3><pre id="l1"></pre><button class="copy" onclick="copyText('l1')">Copy Letter 1</button></div>
+<div class="box"><h3>2. Firm Reminder - Send in 7 Days</h3><pre id="l2"></pre><button class="copy" onclick="copyText('l2')">Copy Letter 2</button></div>
+<div class="box"><h3>3. Letter Before Action - Send in 14 Days (Formal)</h3><pre id="l3"></pre><button class="copy" onclick="copyText('l3')">Copy Letter 3</button></div>
+<button class="main" onclick="window.print()" style="background:#111">Print / Save as PDF</button>
+</div>
+
+<p class="note">Based on UK Late Payment of Commercial Debts (Interest) Act 1998. Interest shown uses 8% + 4% 【entity-Bank of England¦canonical_name=Bank of England】 base rate = 12% for illustration. Check current 【entity-Bank of England¦canonical_name=Bank of England】 base rate before sending. This tool is general information, not legal advice.</p>
+</div>
+
+<script>
+function gen(){
+const myName=document.getElementById('myName').value||'[Your Name]';
+const client=document.getElementById('client').value||'[Client Name]';
+const inv=document.getElementById('inv').value||'[Invoice Number]';
+const amount=parseFloat(document.getElementById('amount').value)||0;
+const due=document.getElementById('dueDate').value||'[Due Date]';
+const invDate=document.getElementById('invDate').value||'[Invoice Date]';
+const today=new Date(); const dueD=new Date(document.getElementById('dueDate').value||Date.now());
+const days=Math.max(0,Math.round((today-dueD)/(1000*60*60*24)));
+const rate=0.12; const interest=amount*rate*days/365;
+let comp=amount<1000?70:amount<10000?100:130;
+const total=amount+interest+comp;
+document.getElementById('out').style.display='block';
+document.getElementById('calc').innerHTML='<b>Calculation:</b> Amount £'+amount.toFixed(2)+' | Days overdue: '+days+' | Interest (12%): £'+interest.toFixed(2)+' | Statutory compensation: £'+comp+' | <b>Total to claim: £'+total.toFixed(2)+'</b>';
+document.getElementById('l1').textContent='Subject: Friendly reminder - Invoice '+inv+' overdue\n\nHi '+client+',\n\nI hope you are well.\n\nJust a friendly reminder that invoice '+inv+' for £'+amount.toFixed(2)+' was due on '+due+'. Could you please confirm when payment will be made?\n\nThank you so much.\n\nBest wishes,\n'+myName;
+document.getElementById('l2').textContent='Subject: Second reminder - Invoice '+inv+' overdue + interest\n\nHi '+client+',\n\nThis is a second reminder that invoice '+inv+' for £'+amount.toFixed(2)+' is now '+days+' days overdue.\n\nUnder the UK Late Payment of Commercial Debts (Interest) Act 1998, I am entitled to charge interest at 8% plus Bank of England base rate, plus a fixed compensation fee. Interest accrued so far: £'+interest.toFixed(2)+'. Compensation: £'+comp+'.\n\nPlease arrange payment of £'+total.toFixed(2)+' within 7 days to avoid further charges.\n\nKind regards,\n'+myName;
+document.getElementById('l3').textContent='LETTER BEFORE ACTION\n\nDate: '+today.toDateString()+'\n\nDear '+client+',\n\nRe: Invoice '+inv+' - £'+amount.toFixed(2)+' - Due '+due+'\n\nDespite previous reminders, invoice '+inv+' for £'+amount.toFixed(2)+', issued on '+invDate+' and due on '+due+', remains unpaid and is now '+days+' days overdue.\n\nI have calculated interest under the Late Payment of Commercial Debts (Interest) Act 1998 of £'+interest.toFixed(2)+' plus statutory compensation of £'+comp+'. Total now due: £'+total.toFixed(2)+'.\n\nIf payment in full is not received within 14 days from the date of this letter, I intend to issue a claim in the Small Claims Court without further notice and will claim interest, compensation and court fees.\n\nPlease treat this as a formal Letter Before Action.\n\nYours sincerely,\n'+myName;
+window.scrollTo(0,document.getElementById('out').offsetTop);
+}
+function copyText(id){navigator.clipboard.writeText(document.getElementById(id).textContent); alert('Copied!');}
+</script>
+</body>
+</html>
